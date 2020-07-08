@@ -1,0 +1,31 @@
+specVersion: '2.0'
+metadata:
+  name: 'catalogapp'
+type: application
+framework:
+  name: SAPUI5
+  version: "1.79.2"
+  libraries:
+    - name: sap.f
+    - name: sap.m
+    - name: sap.suite.ui.generic.template
+    - name: sap.ui.comp
+    - name: sap.ui.core
+    - name: sap.ui.generic.app
+    - name: sap.ui.table
+    - name: sap.ui.unified
+    - name: sap.ushell
+    - name: themelib_sap_fiori_3
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        backend:
+          - path: /sap
+            url: https://5eced45e-1cd1-44b2-a4d4-1e06e2d768dc.abap.stagingaws.hanavlab.ondemand.com
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
+      configuration:
+        port: 35729
+        path: webapp

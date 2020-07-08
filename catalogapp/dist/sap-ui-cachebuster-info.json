@@ -1,0 +1,18 @@
+{
+  "manifest.json": 1594241082174,
+  "test/changes_preview.js": 1594241012037,
+  "i18n/i18n.properties": 1594241012037,
+  "test/changes_loader.js": 1594241012037,
+  "localService/mockserver.js": 1594241012037,
+  "Component.js": 1594241012033,
+  "manifest-bundle.zip": 1594241103454,
+  "Component-preload.js": 1594241103606,
+  "Component-dbg.js": 1594241012033,
+  "test/changes_loader-dbg.js": 1594241012037,
+  "localService/mockserver-dbg.js": 1594241012037,
+  "test/changes_preview-dbg.js": 1594241012037,
+  "test/flpSandboxMockServer.html": 1594241012037,
+  "test/flpSandbox.html": 1594241012037,
+  "localService/metadata.xml": 1594241012037,
+  "annotations/annotation.xml": 1594241012037
+}
