@@ -1,1 +1,0 @@
-sap.ui.define(["sap/suite/ui/generic/template/lib/AppComponent"],function(e){return e.extend("cim.demode.om.catalogapp.Component",{metadata:{manifest:"json"}})});
