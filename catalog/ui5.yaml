@@ -1,0 +1,26 @@
+specVersion: '1.0'
+metadata:
+  name: 'catalog'
+type: application
+ui5Theme: sap_fiori_3
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
+        backend:
+          - path: /sap
+            destination: X08_0036 
+            url: https://5eced45e-1cd1-44b2-a4d4-1e06e2d768dc.abap.stagingaws.hanavlab.ondemand.com
+        ui5:
+          path:
+            - /resources
+            - /test-resources
+          url: https://ui5.sap.com
+          version:  # The UI5 version, for instance, 1.78.1. Empty means latest version
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
+      configuration:
+        port: 35729
+        path: webapp
