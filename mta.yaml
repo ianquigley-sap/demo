@@ -1,0 +1,94 @@
+_schema-version: "3.1"
+ID: com-catalog-demo-deploy-to-cf
+description: Fiori elements app
+version: 0.0.1
+modules:
+- name: comcatalogdemocatalogapp
+  type: html5
+  path: catalogapp
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm run deploy
+    - cp ./xs-app.json dist/xs-app.json
+    supported-platforms: []
+- name: com-catalog-demo-deployer
+  type: com.sap.html5.application-content
+  path: deployer
+  requires:
+  - name: com-catalog-demo-html5-repo-host
+  parameters:
+    content-target: true
+    disk-quota: 128M
+    memory: 64M
+  build-parameters:
+    ignore:
+    - .gitignore
+    requires:
+    - artifacts:
+      - ./*
+      name: comcatalogdemocatalogapp
+      target-path: resources/catalogapp
+- name: com-catalog-demo-router
+  type: approuter.nodejs
+  path: router
+  requires:
+  - name: com-catalog-demo-portal
+  - name: com-catalog-demo-html5-repo-runtime
+  - name: com-catalog-demo-destination
+  - name: com-catalog-demo-uaa
+  parameters:
+    disk-quota: 256M
+    memory: 128M
+    routes:
+    - route: https://com-catalog-demo-${org}-${space}.${default-domain}
+- name: com-catalog-demo-flp
+  type: com.sap.portal.content
+  path: flp
+  requires:
+  - name: com-catalog-demo-portal
+  - name: com-catalog-demo-uaa
+  - name: com-catalog-demo-html5-repo-host
+  parameters:
+    disk-quota: 32M
+    memory: 32M
+  deployed-after:
+  - com-catalog-demo-deployer
+resources:
+- name: com-catalog-demo-html5-repo-runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+- name: com-catalog-demo-html5-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+- name: com-catalog-demo-destination
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: destination
+    service-plan: lite
+- name: com-catalog-demo-uaa
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: com-catalog-demo-demo-${org}
+    service: xsuaa
+    service-plan: application
+- name: com-catalog-demo-portal
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: portal
+    service-plan: standard
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm install

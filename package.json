@@ -1,0 +1,14 @@
+{
+  "name": "mta-project",
+  "version": "0.0.1",
+  "description": "Build and deployment scripts",
+  "scripts": {
+    "clean": "rimraf mta_archives && rimraf mta-op*",
+    "build": "rimraf mta_archives && mbt build",
+    "deploy": "cf deploy mta_archives/*.mtar"
+  },
+  "devDependencies": {
+    "mbt": "^1.0.14",
+    "rimraf": "3.0.0"
+  }
+}
