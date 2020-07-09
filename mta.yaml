@@ -1,0 +1,94 @@
+_schema-version: "3.1"
+ID: com-catafdd-com-deploy-to-cf
+description: Fiori elements app
+version: 0.0.1
+modules:
+- name: comcatafddcomcatalogapp
+  type: html5
+  path: catalogapp
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm run deploy
+    - cp ./xs-app.json dist/xs-app.json
+    supported-platforms: []
+- name: com-catafdd-com-deployer
+  type: com.sap.html5.application-content
+  path: deployer
+  requires:
+  - name: com-catafdd-com-html5-repo-host
+  parameters:
+    content-target: true
+    disk-quota: 128M
+    memory: 64M
+  build-parameters:
+    ignore:
+    - .gitignore
+    requires:
+    - artifacts:
+      - ./*
+      name: comcatafddcomcatalogapp
+      target-path: resources/catalogapp
+- name: com-catafdd-com-router
+  type: approuter.nodejs
+  path: router
+  requires:
+  - name: com-catafdd-com-portal
+  - name: com-catafdd-com-html5-repo-runtime
+  - name: com-catafdd-com-destination
+  - name: com-catafdd-com-uaa
+  parameters:
+    disk-quota: 256M
+    memory: 128M
+    routes:
+    - route: https://com-catafdd-com-${org}-${space}.${default-domain}
+- name: com-catafdd-com-flp
+  type: com.sap.portal.content
+  path: flp
+  requires:
+  - name: com-catafdd-com-portal
+  - name: com-catafdd-com-uaa
+  - name: com-catafdd-com-html5-repo-host
+  parameters:
+    disk-quota: 32M
+    memory: 32M
+  deployed-after:
+  - com-catafdd-com-deployer
+resources:
+- name: com-catafdd-com-html5-repo-runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+- name: com-catafdd-com-html5-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+- name: com-catafdd-com-destination
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: destination
+    service-plan: lite
+- name: com-catafdd-com-uaa
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: com-catafdd-com-demo-${org}
+    service: xsuaa
+    service-plan: application
+- name: com-catafdd-com-portal
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: portal
+    service-plan: standard
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm install
